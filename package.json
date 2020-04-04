@@ -14,9 +14,14 @@
   },
   "homepage": "https://github.com/nullnull/serverless-image-processing#readme",
   "scripts": {
-    "dev": "functions-framework --target=helloWorld"
+    "dev": "functions-framework --target=helloWorld",
+    "watch": "tsc -w",
+    "build": "tsc"
   },
   "dependencies": {
     "@google-cloud/functions-framework": "^1.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.8.3"
   }
 }
