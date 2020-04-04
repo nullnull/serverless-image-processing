@@ -17,7 +17,7 @@
     "dev": "functions-framework --target=helloWorld",
     "watch": "tsc -w",
     "build": "tsc",
-    "deploy": "gcloud functions deploy helloWorld --runtime nodejs10 --trigger-http --allow-unauthenticated --region=asia-northeast1"
+    "deploy": "tsc && gcloud functions deploy helloWorld --runtime nodejs10 --trigger-http --allow-unauthenticated --region=asia-northeast1"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.5.0",

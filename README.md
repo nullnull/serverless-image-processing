@@ -1,10 +1,10 @@
-# nuxt-resource-based-api
+# serverless-image-processing
 ## Development
 ```sh
 # compile typescript
 yarn run watch
 
-# run local server
+# start local server
 yarn run dev
 # curl http://localhost:8080/
 ```
