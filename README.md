@@ -1,5 +1,5 @@
 # nuxt-resource-based-api
-## development
+## Development
 ```sh
 # compile typescript
 yarn run watch
@@ -7,4 +7,9 @@ yarn run watch
 # run local server
 yarn run dev
 # curl http://localhost:8080/
+```
+
+## Deployment
+```sh
+yarn run deploy
 ```
