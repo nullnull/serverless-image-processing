@@ -1,4 +1,4 @@
-# serverless-image-processing
+# [WIP] serverless-image-processing
 ## Development
 ```sh
 # compile typescript
