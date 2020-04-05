@@ -14,15 +14,17 @@
   },
   "homepage": "https://github.com/nullnull/serverless-image-processing#readme",
   "scripts": {
-    "dev": "functions-framework --target=helloWorld",
+    "dev": "functions-framework --target=convertImage",
     "watch": "tsc -w",
     "build": "tsc",
-    "deploy": "tsc && gcloud functions deploy helloWorld --runtime nodejs10 --trigger-http --allow-unauthenticated --region=asia-northeast1"
+    "deploy": "tsc && gcloud functions deploy convertImage --runtime nodejs10 --trigger-http --allow-unauthenticated --region=asia-northeast1"
   },
   "devDependencies": {
     "@google-cloud/functions-framework": "^1.5.0",
     "@typescript-eslint/eslint-plugin": "^2.26.0",
     "@typescript-eslint/parser": "^2.26.0",
+    "@types/request-promise": "^4.1.46",
+    "@types/sharp": "^0.24.0",
     "eslint": "^6.8.0",
     "eslint-config-prettier": "^6.10.1",
     "eslint-config-standard": "^14.1.1",
@@ -45,5 +47,10 @@
       "prettier --write",
       "eslint --fix"
     ]
+  },
+  "dependencies": {
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5",
+    "sharp": "^0.25.2"
   }
 }
