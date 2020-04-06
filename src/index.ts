@@ -1,13 +1,19 @@
 import sharp from "sharp";
 import request from "request-promise";
+import { Request, Response } from "express"; // eslint-disable-line no-unused-vars
+
 const SAMPLE_IMAGE_URL =
   "https://katsumanarisawa.me/_nuxt/img/sunset.768f32b.jpg";
 
 const SAMPLE_CREDIT_URL =
   "https://katsumanarisawa.me/_nuxt/img/symbol_2_wh.2d8cacc.png";
 
-export const convertImage = async (req: any, res: any) => {
+export const convertImage = async (req: Request, res: Response) => {
   console.log("Start convertImage");
+
+  console.log(req.path);
+  console.log(req.query);
+
   const sampleImage = await request.get(SAMPLE_IMAGE_URL, { encoding: null });
   console.log("Finished fetching sampleImage");
 
