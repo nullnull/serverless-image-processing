@@ -1,33 +1,42 @@
 import sharp from "sharp";
-import request from "request-promise";
 import { Request, Response } from "express"; // eslint-disable-line no-unused-vars
-
-const SAMPLE_IMAGE_URL =
-  "https://katsumanarisawa.me/_nuxt/img/sunset.768f32b.jpg";
-
-const SAMPLE_CREDIT_URL =
-  "https://katsumanarisawa.me/_nuxt/img/symbol_2_wh.2d8cacc.png";
+import fetchAllImages from "./fetch_all_images";
+import buildProcesses from "./build_processes";
 
 export const convertImage = async (req: Request, res: Response) => {
   console.log("Start convertImage");
 
-  console.log(req.path);
-  console.log(req.query);
+  const processes = buildProcesses(req);
 
-  const sampleImage = await request.get(SAMPLE_IMAGE_URL, { encoding: null });
-  console.log("Finished fetching sampleImage");
+  // fetch all images before processing
+  const images = await fetchAllImages(processes);
 
-  const sampleCredit = await request.get(SAMPLE_CREDIT_URL, { encoding: null });
-  console.log("Finished fetching sampleCredit");
-
-  const image = sharp(Buffer.from(sampleImage))
-    .resize(840, 360)
-    .composite([
-      {
-        input: Buffer.from(sampleCredit),
-      },
-    ]);
-  console.log("Finished resizing");
+  const image = await processes.reduce(
+    async (image: sharp.Sharp | Promise<sharp.Sharp>, process) => {
+      if (process.type === "initialize") {
+        const inputImage = images[(process as any).imageUrl];
+        return await sharp(inputImage);
+      } else if (process.type === "resize") {
+        const args = (process as any).args;
+        return (await image).resize(...args);
+      } else if (process.type === "composite") {
+        let inputImage: string | Buffer = images[(process as any).imageUrl];
+        if (process.resize) {
+          inputImage = await sharp(inputImage)
+            .resize(process.resize)
+            .toBuffer();
+        }
+        const option = {
+          input: inputImage,
+          ...process.args,
+        };
+        return (await image).composite([option]);
+      } else {
+        return image;
+      }
+    },
+    sharp()
+  );
 
   res.type("jpg");
   res.send(await image.toBuffer());
