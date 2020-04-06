@@ -1,42 +1,14 @@
 import sharp from "sharp";
 /* eslint-disable no-unused-vars */
 import { Request, Response } from "express";
-import fetchAllImages, { Images } from "./fetch_all_images";
+import fetchAllImages from "./fetch_all_images";
 import buildProcesses, {
   InitializeProcess,
   ResizeProcess,
   CompositeProcess,
 } from "./build_processes";
+import { initialize, resize, composite } from "./processes";
 /* eslint-enable no-unused-vars */
-
-const initialize = (
-  images: Images,
-  process: InitializeProcess
-): sharp.Sharp => {
-  const inputImage = images[process.imageUrl];
-  return sharp(inputImage);
-};
-
-const resize = (image: sharp.Sharp, process: ResizeProcess): sharp.Sharp => {
-  const args = (process as any).args;
-  return image.resize(args);
-};
-
-const composite = async (
-  image: sharp.Sharp,
-  images: Images,
-  process: CompositeProcess
-) => {
-  let inputImage: string | Buffer = images[(process as any).imageUrl];
-  if (process.resize) {
-    inputImage = await sharp(inputImage).resize(process.resize).toBuffer();
-  }
-  const option = {
-    input: inputImage,
-    ...process.args,
-  };
-  return image.composite([option]);
-};
 
 export const convertImage = async (req: Request, res: Response) => {
   // build processes from request path and query
