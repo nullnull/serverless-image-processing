@@ -21,6 +21,8 @@ export type CompositeProcess = {
 
 type Process = InitializeProcess | ResizeProcess | CompositeProcess;
 
+export const INVALID_QUERY_ERROR = new Error("Invalid query");
+
 const buildProcesses = (req: Request) => {
   const processes: Process[] = [
     {
@@ -30,16 +32,35 @@ const buildProcesses = (req: Request) => {
   ];
 
   if (req.query.w || req.query.h) {
+    const [h, w] = [parseInt(req.query.h), parseInt(req.query.w)];
+    if (req.query.h && isNaN(h)) {
+      throw INVALID_QUERY_ERROR;
+    }
+    if (req.query.w && isNaN(w)) {
+      throw INVALID_QUERY_ERROR;
+    }
+
     processes.push({
       type: "resize",
       args: {
-        height: parseInt(req.query.h),
-        width: parseInt(req.query.w),
-      },
+        height: h,
+        width: w,
+      }.compact(),
     } as ResizeProcess);
   }
 
   if (req.query.mark) {
+    const [h, w] = [
+      parseInt(req.query["mark-h"]),
+      parseInt(req.query["mark-w"]),
+    ];
+    if (req.query["mark-h"] && isNaN(h)) {
+      throw INVALID_QUERY_ERROR;
+    }
+    if (req.query["mark-w"] && isNaN(w)) {
+      throw INVALID_QUERY_ERROR;
+    }
+
     processes.push(
       {
         type: "composite",
@@ -48,8 +69,8 @@ const buildProcesses = (req: Request) => {
           gravity: req.query["mark-gravity"] || "southeast",
         },
         resize: {
-          height: parseInt(req.query["mark-h"] || ""),
-          width: parseInt(req.query["mark-w"] || ""),
+          height: h,
+          width: w,
         }.compact(),
       }.compact() as CompositeProcess
     );
