@@ -1,7 +1,7 @@
 import request from "request-promise";
 import "./prototype";
 
-type Images = {
+export type Images = {
   [k: string]: string;
 };
 

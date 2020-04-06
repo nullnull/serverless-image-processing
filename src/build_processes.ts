@@ -8,19 +8,31 @@ import "./prototype";
 // const SAMPLE_CREDIT_URL =
 //   "https://katsumanarisawa.me/_nuxt/img/symbol_2_wh.2d8cacc.png";
 
-type Process = {
+export type InitializeProcess = {
   type: string;
-  imageUrl?: string;
+  imageUrl: string;
+};
+
+export type ResizeProcess = {
+  type: string;
+  args: any;
+};
+
+export type CompositeProcess = {
+  type: string;
+  imageUrl: string;
   args?: any;
   resize?: any;
 };
+
+type Process = InitializeProcess | ResizeProcess | CompositeProcess;
 
 const buildProcesses = (req: Request) => {
   const processes: Process[] = [
     {
       type: "initialize",
       imageUrl: config.SOURCE_URL + req.path,
-    },
+    } as InitializeProcess,
   ];
 
   if (req.query.w || req.query.h) {
@@ -30,12 +42,12 @@ const buildProcesses = (req: Request) => {
         height: parseInt(req.query.h),
         width: parseInt(req.query.w),
       },
-    });
+    } as ResizeProcess);
   }
 
   if (req.query.mark) {
-    processes
-      .push({
+    processes.push(
+      {
         type: "composite",
         imageUrl: req.query.mark,
         args: {
@@ -45,8 +57,8 @@ const buildProcesses = (req: Request) => {
           height: parseInt(req.query["mark-h"] || ""),
           width: parseInt(req.query["mark-w"] || ""),
         }.compact(),
-      })
-      .compact();
+      }.compact() as CompositeProcess
+    );
   }
 
   return processes;

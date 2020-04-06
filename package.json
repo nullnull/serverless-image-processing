@@ -17,6 +17,7 @@
     "dev": "functions-framework --target=convertImage",
     "watch": "tsc -w",
     "build": "tsc",
+    "lint": "eslint src/*.ts",
     "deploy": "tsc && gcloud functions deploy convertImage --runtime nodejs10 --trigger-http --allow-unauthenticated --region=asia-northeast1"
   },
   "devDependencies": {
