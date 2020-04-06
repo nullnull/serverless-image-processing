@@ -1,5 +1,5 @@
 export default {
-  SOURCE_URL: "https://katsumanarisawa.me/_nuxt",
-  WITH_SECURE_TOKEN: true,
+  SOURCE_URL: "https://dummy.s3-ap-northeast-1.amazonaws.com",
+  WITH_SECURE_TOKEN: false,
   SECRET_FOR_SECURE_TOKEN: "secret",
 };
