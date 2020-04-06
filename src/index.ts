@@ -51,7 +51,14 @@ export const convertImage = async (req: Request, res: Response) => {
     } else if (/^Expected valid gravity for gravity/.test(e.message)) {
       res.statusCode = 422;
       res.send("Invalid gravity");
+    } else if (
+      /^Image to composite must have same dimensions or smaller/.test(e.message)
+    ) {
+      res.type("text");
+      res.statusCode = 422;
+      res.send(e.message);
     } else {
+      res.type("text");
       res.statusCode = 500;
       res.send(e.message);
     }
