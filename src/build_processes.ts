@@ -1,3 +1,4 @@
+import md5 from "md5";
 import { Request } from "express"; // eslint-disable-line no-unused-vars
 import config from "./config";
 import "./prototype";
@@ -24,6 +25,22 @@ type Process = InitializeProcess | ResizeProcess | CompositeProcess;
 export const INVALID_QUERY_ERROR = new Error("Invalid query");
 
 const buildProcesses = (req: Request) => {
+  if (config.WITH_SECURE_TOKEN) {
+    if (!req.query.s) {
+      throw INVALID_QUERY_ERROR;
+    }
+    const urlWithoutSecureToken = req.url.replace(
+      new RegExp("[&?]s=" + req.query.s),
+      ""
+    );
+    if (
+      req.query.s !==
+      md5(urlWithoutSecureToken + config.SECRET_FOR_SECURE_TOKEN)
+    ) {
+      throw INVALID_QUERY_ERROR;
+    }
+  }
+
   const processes: Process[] = [
     {
       type: "initialize",

@@ -44,13 +44,13 @@ export const convertImage = async (req: Request, res: Response) => {
     } else if (e.name === "RequestError") {
       // URL of mark parameter is invalid.
       res.statusCode = 422;
-      res.send("Invalid query strings");
+      res.send("Invalid image url");
     } else if (e === INVALID_QUERY_ERROR) {
       res.statusCode = 422;
       res.send("Invalid query strings");
     } else if (/^Expected valid gravity for gravity/.test(e.message)) {
       res.statusCode = 422;
-      res.send("Invalid query strings");
+      res.send("Invalid gravity");
     } else {
       res.statusCode = 500;
       res.send(e.message);
