@@ -1,5 +1,6 @@
 import { Request, Response } from "express"; // eslint-disable-line no-unused-vars
 import config from "./config";
+import "./prototype";
 
 // const SAMPLE_IMAGE_URL =
 //   "https://katsumanarisawa.me/_nuxt/img/sunset.768f32b.jpg";
@@ -33,17 +34,19 @@ const buildProcesses = (req: Request) => {
   }
 
   if (req.query.mark) {
-    processes.push({
-      type: "composite",
-      imageUrl: req.query.mark,
-      args: {
-        gravity: req.query["mark-gravity"] || "southeast",
-      },
-      // resize: {
-      //   height: parseInt(req.query["mark-h"] || ''),
-      //   width: parseInt(req.query["mark-w"] || '')
-      // } // TODO: compact
-    }); // TODO: compact
+    processes
+      .push({
+        type: "composite",
+        imageUrl: req.query.mark,
+        args: {
+          gravity: req.query["mark-gravity"] || "southeast",
+        },
+        resize: {
+          height: parseInt(req.query["mark-h"] || ""),
+          width: parseInt(req.query["mark-w"] || ""),
+        }.compact(),
+      })
+      .compact();
   }
 
   return processes;
