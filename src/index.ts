@@ -4,13 +4,13 @@ import fetchAllImages from "./fetch_all_images";
 import buildProcesses from "./build_processes";
 
 export const convertImage = async (req: Request, res: Response) => {
-  console.log("Start convertImage");
-
+  // build processes from request path and query
   const processes = buildProcesses(req);
 
   // fetch all images before processing
   const images = await fetchAllImages(processes);
 
+  // process image
   const image = await processes.reduce(
     async (image: sharp.Sharp | Promise<sharp.Sharp>, process) => {
       if (process.type === "initialize") {
@@ -18,7 +18,7 @@ export const convertImage = async (req: Request, res: Response) => {
         return await sharp(inputImage);
       } else if (process.type === "resize") {
         const args = (process as any).args;
-        return (await image).resize(...args);
+        return (await image).resize(args);
       } else if (process.type === "composite") {
         let inputImage: string | Buffer = images[(process as any).imageUrl];
         if (process.resize) {
